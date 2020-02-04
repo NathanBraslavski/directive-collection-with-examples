@@ -1,0 +1,12 @@
+<h1> Directives </h1>
+
+<h3> ng-let </h3>
+<p>
+  *ngLet can be used to define variables in the HTML file<br>
+  It's like using *ngIf without the "if" part, and more importantly without recreating the context each time.
+  <br><br>
+  usage:  *ngLet="(value$ | async) as val"
+</p>
+
+<div *ngLet="(value$ | async) as val"> x = {{ val }} </div>
+<div *ngLet="abc as val"> x = {{ val }} </div>
