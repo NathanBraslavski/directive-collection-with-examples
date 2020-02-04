@@ -6,7 +6,36 @@
   It's like using *ngIf without the "if" part, and more importantly without recreating the context each time.
   <br><br>
   usage:  *ngLet="(value$ | async) as val"
+  usage:  *ngLet="data as val"
 </p>
 
-<div *ngLet="(value$ | async) as val"> x = {{ val }} </div>
-<div *ngLet="abc as val"> x = {{ val }} </div>
+<div *ngLet="data as val"> let x = {{ val }} </div>
+<div *ngLet="(value$ | async) as val"> let x = {{ val }} </div>
+
+<h3> ng-var </h3>
+<p>
+  It's like using *ngIf without the "if" part, for any change it will recreate the component.
+  <br><br>
+  usage:  *ngVar="(value$ | async) as val"
+  usage:  *ngVar="data as val"
+</p>
+
+<div *ngVar="data as val"> var x = {{ val }} </div>
+<div *ngVar="(value$ | async) as val"> var x = {{ val }} </div>
+
+
+<p>
+  To see the difference between the two open the devtools and navigate to the divs bellow.
+  notice how the ngVar recreates the parent component while the ngLet just updates the value.
+  In words, using ngVar will recreate the child component, while ngLet will create it only once (or until the event will be undefined)
+</p>
+
+<div id="ngLetCompare" *ngLet="(dynamic$ | async) as dynamic">
+  <div> let x = {{ dynamic }} </div>
+  <!-- <demo></demo> -->
+</div>
+
+<div id="ngVarCompare" *ngVar="(dynamic$ | async) as dynamic">
+  <div> var x = {{ dynamic }} </div>
+  <!-- <demo></demo> -->
+</div>

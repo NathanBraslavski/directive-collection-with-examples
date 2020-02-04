@@ -1,47 +1,56 @@
-import { Directive, Input, TemplateRef, ViewContainerRef, EmbeddedViewRef } from '@angular/core';
+import {
+  Directive,
+  Input,
+  TemplateRef,
+  ViewContainerRef,
+  EmbeddedViewRef
+} from "@angular/core";
 
 @Directive({
-    selector: '[ngLet]'
+  selector: "[ngLet]"
 })
 export class LetDirective {
-    _value: any;
-    _ref: EmbeddedViewRef<NgLetContext>;
-    context: any = {};
+  _value: any;
+  _ref: EmbeddedViewRef<NgLetContext>;
+  context: any = {};
 
-    @Input()
-    set ngLet(context: any) {
-        this._value = context;
-        
-        if (!this._ref) {
-            this.updateView();
-        }
+  @Input()
+  set ngLet(value: any) {
+    // save context to local variable
+    this._value = value;
 
-        if (!context) {
-            this._ref.destroy();
-            this._ref = undefined;
+    // if embeadded view doesn't exist yet create it (only once)
+    if (!this._ref)
+      this.createView();
 
-            return;
-        }
+    // if value is empty destroy the component
+    // here it's acctualy works like ngIf (will rerender on non-empty value)
+    if (!value) {
+      this._ref.destroy();
+      this._ref = undefined;
 
-        this.context.$implicit = this.context.ngLet = context;
+      return;
     }
 
-    get ngLet(): any {
-      return this._value;
-    }
+    // set the context to the value
+    this.context.$implicit = this.context.ngLet = value;
+  }
 
-    constructor(
-      private readonly vcRef: ViewContainerRef,
-      private readonly templateRef: TemplateRef<any>) { }
+  get ngLet(): any {
+    return this._value;
+  }
 
-    updateView(): void {
-        this.vcRef.clear();
-        this._ref = this.vcRef.createEmbeddedView(this.templateRef, this.context);
-    }
+  constructor(
+    private readonly vcRef: ViewContainerRef,
+    private readonly templateRef: TemplateRef<any>
+  ) {}
 
-
+  createView(): void {
+    this.vcRef.clear();
+    this._ref = this.vcRef.createEmbeddedView(this.templateRef, this.context);
+  }
 }
 
 export class NgLetContext {
-    constructor(public $implicit: any) { }
+  constructor(public $implicit: any) {}
 }
