@@ -10,15 +10,11 @@ import {
   selector: "[ngLet]"
 })
 export class LetDirective {
-  _value: any;
-  _ref: EmbeddedViewRef<NgLetContext>;
+  _ref: EmbeddedViewRef<any>;
   context: any = {};
 
   @Input()
   set ngLet(value: any) {
-    // save context to local variable
-    this._value = value;
-
     // if embeadded view doesn't exist yet create it (only once)
     if (!this._ref)
       this.createView();
@@ -32,12 +28,8 @@ export class LetDirective {
       return;
     }
 
-    // set the context to the value
-    this.context.$implicit = this.context.ngLet = value;
-  }
-
-  get ngLet(): any {
-    return this._value;
+    // add the value to the context
+    this._ref.context.$implicit = this.context.ngLet = value;
   }
 
   constructor(
@@ -49,8 +41,4 @@ export class LetDirective {
     this.vcRef.clear();
     this._ref = this.vcRef.createEmbeddedView(this.templateRef, this.context);
   }
-}
-
-export class NgLetContext {
-  constructor(public $implicit: any) {}
 }
